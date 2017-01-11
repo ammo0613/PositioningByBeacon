@@ -107,7 +107,7 @@ bleacon.on("discover", function(bleacon) {
              console.log(sendCount);
              if(sendCount >= MAXSEND) {
                 console.log("Exit");
-                process.exit;                                //強制終了
+                process.exit(0);                             //強制終了
              }
         }
         loopCount++;                                         //ビーコン受信回数をカウント
