@@ -16,11 +16,18 @@ const MAXSEND  = 5;                                    //送信回数
 var conf = new Object();
 
 var fs = require('fs');
-fs.readFile('test.txt', 'utf8', function (err, text) {
+fs.readFile('hoge.json', 'utf8', function (err, text) {
     console.log('text file!');
     console.log(text);
     console.log('error!?');
     console.log(err);
+    if(err == null) {
+       conf = JSON.parse(text);
+    } else {
+       console.log('error!');
+       console.log(err);
+       process.exit(0);                             //強制終了
+    }
 });
 
 
