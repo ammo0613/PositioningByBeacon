@@ -79,12 +79,12 @@ bleacon.on("discover", function(bleacon) {
                 beaconNo.push(MajMin);                  //ビーコン番号を追加
                 beacons.push(bcn);                      //ビーコンの情報を追加
                 console.log("add");
-                console.log(JSON.stringify(bcn));
+                console.log(JSON.stringify(beacons));
            } else {                                     //メジャーが登録されていた
                 beacons[i] = bcn;                       //ビーコンの情報を更新
                 console.log("up date");
                 console.log(i);
-                console.log(JSON.stringify(bcn));
+                console.log(JSON.stringify(beacons));
            }
 
            beaconCount++;
