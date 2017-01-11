@@ -104,7 +104,9 @@ bleacon.on("discover", function(bleacon) {
              beaconCount = 0;
              loopCount = 0;
              sendCount ++;
+             console.log(sendCount);
              if(sendCount >= MAXSEND) {
+                console.log("Exit");
                 process.exit;                                //強制終了
              }
         }
