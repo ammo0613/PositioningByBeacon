@@ -89,7 +89,7 @@ bleacon.on("discover", function(bleacon) {
 
            beaconCount++;
 
-           if(beaconCount == MAXBEACON or loopCont == MAXRECV) {
+           if(beaconCount == MAXBEACON || loopCont == MAXRECV) {
                 beaconCount = 0;
                 loopCount = 0;
                 msg.beacon = beacons;
