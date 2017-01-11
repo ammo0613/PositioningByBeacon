@@ -57,7 +57,7 @@ function sleep(time) {
 }
 
 
-//MQTTでtriggerを受信したら初期化
+//MQTTでtriggerを受信したら初期化　⇒　エリアコードを受けて取得開始する方式に改修すること
 trigger.on('message',function(tipic, message) {
 	console.log('Recive trigger!');
 	beacons.length = 0;
