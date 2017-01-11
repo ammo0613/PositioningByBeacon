@@ -7,18 +7,19 @@ var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      
 var date    = require('date-utils');
 var sprintf = require('sprintf-js').sprintf;
 
+/* 設定ファイルに移行
 const MYDEVICE = "MyEdison2";                           //ビーコン検知用ゲートウェイの名前
 const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ロケーション用ビーコンのUUID
 const MAXBEACON = 10;                                   //この回数ビーコンデバイスを検出したら、サーバーに送信する
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
-const MAXSEND  = 5;                                    //送信回数
+const MAXSEND  = 5;                                     //送信回数
+*/
 
 var conf = new Object();
 
-var fs = require('fs');
+var fs = require('fs');                                 //設定ファイルの読み込み
+
 fs.readFile('hoge.json', 'utf8', function (err, text) {
-    console.log('text file!');
-    console.log(text);
     if(err == null) {
        conf = JSON.parse(text);
        console.log(JSON.stringify(conf));
@@ -28,7 +29,6 @@ fs.readFile('hoge.json', 'utf8', function (err, text) {
        process.exit(0);                             //強制終了
     }
 });
-
 
 var msg = new Object();         //サーバーに通知するJSONを格納
                                 //{gateway:xxxxx, time:xxxxx, uuid:xxxxx, beacon:beacons[]}
@@ -80,14 +80,14 @@ bleacon.on("discover", function(bleacon) {
            beaconNo.length = 0;      //ビーコン番号（メジャー＋マイナー）を格納する配列をクリア
            var dt=new Date();
            formatted   = dt.toFormat("YYYY-MM-DDTHH24:MI:SS.") + sprintf("%03dZ", dt.getMilliseconds());
-           msg.gateway = MYDEVICE;
+           msg.gateway = conf.mydevice;
            msg.time    = formatted;
-           msg.uuid    = MYUUID;
+           msg.uuid    = conf.myuuid;
            console.log("Initialise message");
            console.log(formatted);
         }
 
-        if (bleacon.uuid == MYUUID) {   //ロケーション用ビーコンのUUIDか？
+        if (bleacon.uuid == conf.myuuid) {   //ロケーション用ビーコンのUUIDか？
 
            var bcn = Object();
            bcn.major = bleacon.major;
@@ -113,7 +113,7 @@ bleacon.on("discover", function(bleacon) {
 
         }
 
-        if(beaconCount >= MAXBEACON || loopCount >= MAXRECV) {  //ビーコン個数が所定値を超えたか、ビーコン受信回数が所定値を超えたら送信
+        if(beaconCount >= conf.maxbeacon || loopCount >= conf.maxrecv) {  //ビーコン個数が所定値を超えたか、ビーコン受信回数が所定値を超えたら送信
              msg.beacon = beacons;
              console.log(beacons.length);
              client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
@@ -124,7 +124,7 @@ bleacon.on("discover", function(bleacon) {
              loopCount = 0;
              sendCount ++;
              console.log(sendCount);
-             if(sendCount >= MAXSEND) {
+             if(sendCount >= conf.maxsend) {
                 console.log("Exit");
                 process.exit(0);                             //強制終了
              }
