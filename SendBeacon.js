@@ -56,8 +56,8 @@ bleacon.on("discover", function(bleacon) {
         if (bleacon.uuid == MYUUID) {   //ロケーション用ビーコンのUUIDか？
 
            if(beaconCount == 0) {       //クリア直後はゲートウェイ名、現在時間、ビーコンのUUIDをメッセージに追加
-              beacones    = [];         //ビーコン情報を格納する配列をクリア
-              beaconNo    = [];         //ビーコン番号（メジャー＋マイナー）を格納する配列をクリア
+              beacones.length = 0;      //ビーコン情報を格納する配列をクリア
+              beaconNo.length = 0;      //ビーコン番号（メジャー＋マイナー）を格納する配列をクリア
               var dt=new Date();
               formatted   = dt.toFormat("YYYY-MM-DDTHH24:MI:SS.") + sprintf("%03dZ", dt.getMilliseconds());
               msg.gateway = MYDEVICE;
