@@ -13,6 +13,17 @@ const MAXBEACON = 10;                                   //この回数ビーコ�
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
 const MAXSEND  = 5;                                    //送信回数
 
+var conf = new Object();
+
+var fs = require('fs');
+fs.readFile('test.txt', 'utf8', function (err, text) {
+    console.log('text file!');
+    console.log(text);
+    console.log('error!?');
+    console.log(err);
+});
+
+
 var msg = new Object();         //サーバーに通知するJSONを格納
                                 //{gateway:xxxxx, time:xxxxx, uuid:xxxxx, beacon:beacons[]}
 var beacons = [];               //受信したビーコンの情報を格納、メジャーをユニークキーとして最後に受信した値を保存
@@ -46,6 +57,8 @@ trigger.on('message',function(tipic, message) {
 	beacons.length = 0;
 	beaconNo.length = 0;
 	beaconCount = 0;
+        loopCount = 0;
+        sendCount = 0;
 
 	console.log("Sleep");
 	sleep(3000);
