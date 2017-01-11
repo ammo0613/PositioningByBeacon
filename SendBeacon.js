@@ -40,19 +40,19 @@ function sleep(time) {
 
 //MQTTでtriggerを受信したら初期化
 trigger.on('message',function(tipic, message) {
-	//console.log('Recive trigger!');
+	console.log('Recive trigger!');
 	beacons.length = 0;
 	beaconNo.length = 0;
 	beaconCount = 0;
 
-	//console.log("Sleep");
+	console.log("Sleep");
 	sleep(3000);
 });
 
 //ビーコンを検知
 bleacon.on("discover", function(bleacon) {
 
-        //console.log(bleacon.uuid);
+        console.log(bleacon.uuid);
         if (bleacon.uuid == MYUUID) {   //ロケーション用ビーコンのUUIDか？
 
            if(beaconCount == 0) {       //クリア直後はゲートウェイ名、現在時間、ビーコンのUUIDをメッセージに追加
@@ -63,7 +63,7 @@ bleacon.on("discover", function(bleacon) {
               msg.gateway = MYDEVICE;
               msg.time    = formatted;
               msg.uuid    = MYUUID;
-              //console.log(formatted);
+              console.log(formatted);
 
            }
 
@@ -77,14 +77,14 @@ bleacon.on("discover", function(bleacon) {
            if (i == -1) {                               //メジャーが登録されていない
                 majorNo.push(MajMin);
                 beacons.push(bcn);                      //ビーコンの情報を追加
-                //console.log("add");
-                //console.log(JSON.stringify(bcn));
+                console.log("add");
+                console.log(JSON.stringify(bcn));
            } else {                                     //メジャーが登録されていた
                 var bcn = Object();
                 beacons[i] = bcn;                       //ビーコンの情報を更新
-                //console.log("up date");
-                //console.log(i);
-                //console.log(JSON.stringify(bcn));
+                console.log("up date");
+                console.log(i);
+                console.log(JSON.stringify(bcn));
            }
 
            beaconCount++;
@@ -93,9 +93,9 @@ bleacon.on("discover", function(bleacon) {
                 beaconCount = 0;
                 loopCount = 0;
                 msg.beacon = beacons;
-                //console.log(beacons.length);
+                console.log(beacons.length);
                 client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
-                //console.log(JSON.stringify(msg));
+                console.log(JSON.stringify(msg));
                 client.publish("no",String(beacons.length));    //個数をMQTTで送信
            }
         }
