@@ -19,7 +19,7 @@ var conf = new Object();
 
 var fs = require('fs');                                 //設定ファイルの読み込み
 
-fs.readFile('hoge.json', 'utf8', function (err, text) {
+fs.readFile('config.json', 'utf8', function (err, text) {
     if(err == null) {
        conf = JSON.parse(text);
        console.log(JSON.stringify(conf));

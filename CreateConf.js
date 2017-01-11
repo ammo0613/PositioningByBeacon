@@ -7,4 +7,4 @@ var data = {
     maxrecv: 20,
     maxsend: 5,
 };
-fs.writeFile('hoge.json', JSON.stringify(data, null, '    '));
+fs.writeFile('config.json', JSON.stringify(data, null, '    '));
