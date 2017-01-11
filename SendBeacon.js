@@ -81,7 +81,6 @@ bleacon.on("discover", function(bleacon) {
                 console.log("add");
                 console.log(JSON.stringify(bcn));
            } else {                                     //メジャーが登録されていた
-                var bcn = Object();
                 beacons[i] = bcn;                       //ビーコンの情報を更新
                 console.log("up date");
                 console.log(i);
