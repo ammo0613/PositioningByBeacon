@@ -11,7 +11,7 @@ const MYDEVICE = "MyEdison2";                           //ビーコン検知用�
 const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ロケーション用ビーコンのUUID
 const MAXBEACON = 10;                                   //この回数ビーコンデバイスを検出したら、サーバーに送信する
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
-const MAXSEND  = 50;                                    //送信回数
+const MAXSEND  = 5;                                    //送信回数
 
 var msg = new Object();         //サーバーに通知するJSONを格納
                                 //{gateway:xxxxx, time:xxxxx, uuid:xxxxx, beacon:beacons[]}
