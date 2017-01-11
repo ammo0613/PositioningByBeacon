@@ -7,11 +7,11 @@ var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      
 var date    = require('date-utils');
 var sprintf = require('sprintf-js').sprintf;
 
-
 const MYDEVICE = "MyEdison2";                           //ビーコン検知用ゲートウェイの名前
 const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ロケーション用ビーコンのUUID
 const MAXBEACON = 10;                                   //この回数ビーコンデバイスを検出したら、サーバーに送信する
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
+const MAXSEND  = 50;                                    //送信回数
 
 var msg = new Object();         //サーバーに通知するJSONを格納
                                 //{gateway:xxxxx, time:xxxxx, uuid:xxxxx, beacon:beacons[]}
@@ -22,6 +22,8 @@ var beaconNo = [];              //受信したメジャー番号+マイナー番
 var beaconCount = 0;            //受信したビーコンのデバイス数をカウント
 
 var loopCount = 0;              //受信したビーコンのメッセージ数をカウント
+
+var sendCount = 0;              //送信回数
 
 trigger.subscribe('trigger');   //MQTTサブスクライバーの定義
 
@@ -101,6 +103,10 @@ bleacon.on("discover", function(bleacon) {
 
              beaconCount = 0;
              loopCount = 0;
+             sendCount ++;
+             if(sendCount >= MAXSEND) {
+                process.exit;                                //強制終了
+             }
         }
         loopCount++;                                         //ビーコン受信回数をカウント
 });
