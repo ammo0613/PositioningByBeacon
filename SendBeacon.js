@@ -73,6 +73,7 @@ bleacon.on("discover", function(bleacon) {
            bcn.rssi  = bleacon.rssi;
 
            var MajMin = String(bleacon.major) + String(bleacon.minor);
+           console.log(MajMin);
            var i = beaconNo.indexOf(MajMin);            //同じメジャーを検索
            if (i == -1) {                               //メジャーが登録されていない
                 majorNo.push(MajMin);
