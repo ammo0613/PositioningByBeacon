@@ -80,14 +80,14 @@ bleacon.on("discover", function(bleacon) {
                 beaconNo.push(MajMin);                  //ビーコン番号を追加
                 beacons.push(bcn);                      //ビーコンの情報を追加
                 console.log("add Beacon");
-                console.log(JSON.stringify(beacons));
+                console.log(JSON.stringify(bcn));
                 beaconCount++;                          //有効なビーコンの個数をカウント
 
            } else {                                     //メジャーが登録されていた
                 beacons[i] = bcn;                       //ビーコンの情報を更新
                 console.log("up date Beacon");
                 console.log(i);
-                console.log(JSON.stringify(beacons));
+                console.log(JSON.stringify(bcn));
            }
 
         }
