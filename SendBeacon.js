@@ -19,10 +19,9 @@ var fs = require('fs');
 fs.readFile('hoge.json', 'utf8', function (err, text) {
     console.log('text file!');
     console.log(text);
-    console.log('error!?');
-    console.log(err);
     if(err == null) {
        conf = JSON.parse(text);
+       console.log(JSON.stringify(conf));
     } else {
        console.log('error!');
        console.log(err);
