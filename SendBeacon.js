@@ -70,7 +70,7 @@ trigger.on('message',function(tipic, message) {
 	sleep(3000);
 });
 
- setTimeout(() => {
+ setTimeout(function() => {
     console.log('Timeout');
 	
     msg.beacon = beacons;
