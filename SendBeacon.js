@@ -70,64 +70,59 @@ trigger.on('message',function(tipic, message) {
 	sleep(3000);
 });
 
+ setTimeout(() => {
+    console.log('Timeout');
+	
+    msg.beacon = beacons;
+    console.log(beacons.length);
+    client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
+    console.log(JSON.stringify(msg));
+    client.publish("no",String(beacons.length));    //個数をMQTTで送信
+
+    beaconCount = 0;
+    loopCount = 0;
+    console.log(sendCount);
+ }, 5000);
+
 //ビーコンを検知
 bleacon.on("discover", function(bleacon) {
 
-        console.log(bleacon.uuid);
+    console.log(bleacon.uuid);
 
-        if(beaconCount == 0) {       //クリア直後はゲートウェイ名、現在時間、ビーコンのUUIDをメッセージに追加
-           beacons.length = 0;      //ビーコン情報を格納する配列をクリア
-           beaconNo.length = 0;      //ビーコン番号（メジャー＋マイナー）を格納する配列をクリア
-           var dt=new Date();
-           formatted   = dt.toFormat("YYYY-MM-DDTHH24:MI:SS.") + sprintf("%03dZ", dt.getMilliseconds());
-           msg.gateway = conf.mydevice;
-           msg.time    = formatted;
-           msg.uuid    = conf.myuuid;
-           console.log("Initialise message");
-           console.log(formatted);
+    if(beaconCount == 0) {       //クリア直後はゲートウェイ名、現在時間、ビーコンのUUIDをメッセージに追加
+        beacons.length = 0;      //ビーコン情報を格納する配列をクリア
+        beaconNo.length = 0;      //ビーコン番号（メジャー＋マイナー）を格納する配列をクリア
+        var dt=new Date();
+        formatted   = dt.toFormat("YYYY-MM-DDTHH24:MI:SS.") + sprintf("%03dZ", dt.getMilliseconds());
+        msg.gateway = conf.mydevice;
+        msg.time    = formatted;
+        msg.uuid    = conf.myuuid;
+        console.log("Initialise message");
+        console.log(formatted);
+    }
+
+    if (bleacon.uuid == conf.myuuid) {   //ロケーション用ビーコンのUUIDか？
+
+        var bcn = Object();
+        bcn.major = bleacon.major;
+        bcn.minor = bleacon.minor;
+        bcn.rssi  = bleacon.rssi;
+
+        var MajMin = String(bleacon.major) + String(bleacon.minor);
+        console.log(MajMin);
+        var i = beaconNo.indexOf(MajMin);            //同じメジャーを検索
+        if (i == -1) {                               //ビーコン番号が登録されていない
+            beaconNo.push(MajMin);                   //ビーコン番号を追加
+            beacons.push(bcn);                       //ビーコンの情報を追加
+            console.log("add Beacon");
+            console.log(JSON.stringify(bcn));
+            beaconCount++;                           //有効なビーコンの個数をカウント
+
+        } else {                                     //メジャーが登録されていた
+            beacons[i] = bcn;                        //ビーコンの情報を更新
+            console.log("up date Beacon");
+            console.log(i);
+            console.log(JSON.stringify(bcn));
         }
-
-        if (bleacon.uuid == conf.myuuid) {   //ロケーション用ビーコンのUUIDか？
-
-           var bcn = Object();
-           bcn.major = bleacon.major;
-           bcn.minor = bleacon.minor;
-           bcn.rssi  = bleacon.rssi;
-
-           var MajMin = String(bleacon.major) + String(bleacon.minor);
-           console.log(MajMin);
-           var i = beaconNo.indexOf(MajMin);            //同じメジャーを検索
-           if (i == -1) {                               //ビーコン番号が登録されていない
-                beaconNo.push(MajMin);                  //ビーコン番号を追加
-                beacons.push(bcn);                      //ビーコンの情報を追加
-                console.log("add Beacon");
-                console.log(JSON.stringify(bcn));
-                beaconCount++;                          //有効なビーコンの個数をカウント
-
-           } else {                                     //メジャーが登録されていた
-                beacons[i] = bcn;                       //ビーコンの情報を更新
-                console.log("up date Beacon");
-                console.log(i);
-                console.log(JSON.stringify(bcn));
-           }
-
-        }
-
-        if(beaconCount >= conf.maxbeacon || loopCount >= conf.maxrecv) {  //ビーコン個数が所定値を超えたか、ビーコン受信回数が所定値を超えたら送信
-             msg.beacon = beacons;
-             console.log(beacons.length);
-             client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
-             console.log(JSON.stringify(msg));
-             client.publish("no",String(beacons.length));    //個数をMQTTで送信
-
-             beaconCount = 0;
-             loopCount = 0;
-             sendCount ++;
-             console.log(sendCount);
-             if(sendCount >= conf.maxsend) {
-                console.log("Exit");
-                process.exit(0);                             //強制終了
-             }
-        }
-        loopCount++;                                         //ビーコン受信回数をカウント
+    }
 });
