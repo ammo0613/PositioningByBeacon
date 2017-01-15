@@ -1,4 +1,4 @@
-var bleacon = require("bleacon");
+﻿var bleacon = require("bleacon");
 
 var mqtt    = require("mqtt");
 var client  = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //送信用
