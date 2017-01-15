@@ -70,18 +70,19 @@ trigger.on('message',function(tipic, message) {
 	sleep(3000);
 });
 
- setTimeout(function() {
-    console.log('Timeout');
-	
-    msg.beacon = beacons;
-    console.log(beacons.length);
-    client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
-    console.log(JSON.stringify(msg));
-    client.publish("no",String(beacons.length));    //個数をMQTTで送信
+setInterval(function() {
+    console.log('Send Message');
+    if(beaconCount != 0) {
+        msg.beacon = beacons;
+        console.log(beacons.length);
+        client.publish("beacon",JSON.stringify(msg));   //メッセージをMQTTで送信
+        console.log(JSON.stringify(msg));
+        client.publish("no",String(beacons.length));    //個数をMQTTで送信
 
-    beaconCount = 0;
-    loopCount = 0;
-    console.log(sendCount);
+        beaconCount = 0;
+        loopCount = 0;
+        console.log(sendCount);
+	}	
  }, 5000);
 
 //ビーコンを検知
