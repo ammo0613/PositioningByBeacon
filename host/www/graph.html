@@ -1,0 +1,39 @@
+<script src="http://ccchart.com/js/ccchart.js" charset="utf-8"></script>
+<canvas id="hoge"></canvas>
+<script>
+var chartdata80 = {
+
+  "config": {
+    "title": "Beacon RSSI",
+    "subTitle": "BeaconのRSSIを表示",
+    "type": "bar",
+    "maxY": 100,
+    "minY": 0,
+    "barWidth": 24,
+    "useVal": "yes",
+    "maxWsColLen": 4,
+    "textColors": {"title":"#222","subTitle":"#222","hanrei":"#777","unit":"#777"
+          },
+    "colorSet": 
+          ["red","#FF9114","#3CB000","#00A8A2","#0036C0","#C328FF","#FF34C0"],
+    "shadows": {"all":["#444",5,5,5]}
+  },
+
+  "data": [
+    ["BeaconNo"],
+    ["RSSI"],
+  ]
+};
+
+  ccchart.wsCloseAll();//一旦クリア
+
+  ccchart
+      .init('hoge', chartdata80,
+        function () {
+          this
+            .ws('ws://test-suda-4xx44l81.cloudapp.net:8016')
+            .on('message', ccchart.wscase.someColsAtATime)
+        }
+      );
+
+</script>

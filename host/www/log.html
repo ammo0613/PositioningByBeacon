@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var host = window.document.location.host.replace(/:.*/, '');
+        var ws = new WebSocket('ws://' + host + ':8018');
+        var tg = new WebSocket('ws://' + host + ':8017');
+        ws.onmessage = function (event) {
+            document.getElementById("messages").innerHTML += "<div>" + JSON.parse(event.data) + "</div>";
+            console.log(JSON.parse(event.data));
+        };
+        tg.onmessage = function (event) {
+            document.getElementById("messages").innerHTML = "<div></div>";
+        };
+    </script>
+</head>
+<body>
+<strong>Beacon Log</strong><br>
+<br>
+<hr>
+<div id="messages"/>
+</body>
+</html>
