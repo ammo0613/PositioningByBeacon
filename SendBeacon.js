@@ -1,23 +1,23 @@
 var bleacon = require("bleacon");
 
 var mqtt    = require("mqtt");
-var client  = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //‘—M—p
-var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //óM—p
+var client  = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //é€ä¿¡ç”¨
+var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //å—ä¿¡ç”¨
 
 var date    = require('date-utils');
 var sprintf = require('sprintf-js').sprintf;
 
-/* İ’èƒtƒ@ƒCƒ‹‚ÉˆÚs
-const MYDEVICE = "MyEdison2";                           //ƒr[ƒRƒ“ŒŸ’m—pƒQ[ƒgƒEƒFƒC‚Ì–¼‘O
-const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ƒƒP[ƒVƒ‡ƒ“—pƒr[ƒRƒ“‚ÌUUID
-const MAXBEACON = 10;                                   //‚±‚Ì‰ñ”ƒr[ƒRƒ“ƒfƒoƒCƒX‚ğŒŸo‚µ‚½‚çAƒT[ƒo[‚É‘—M‚·‚é
-const MAXRECV  = 20;                                    //ƒr[ƒRƒ“”‚ª­‚È‚¢ê‡A‚±‚Ì‰½‰ñƒr[ƒRƒ“‚ğóM‚µ‚½‚çAƒT[ƒo[‚É‘—M‚·‚é
-const MAXSEND  = 5;                                     //‘—M‰ñ”
+/* è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã«ç§»è¡Œ
+const MYDEVICE = "MyEdison2";                           //ãƒ“ãƒ¼ã‚³ãƒ³æ¤œçŸ¥ç”¨ã‚²ãƒ¼ãƒˆã‚¦ã‚§ã‚¤ã®åå‰
+const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ãƒ“ãƒ¼ã‚³ãƒ³ã®UUID
+const MAXBEACON = 10;                                   //ã“ã®å›æ•°ãƒ“ãƒ¼ã‚³ãƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¤œå‡ºã—ãŸã‚‰ã€ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹
+const MAXRECV  = 20;                                    //ãƒ“ãƒ¼ã‚³ãƒ³æ•°ãŒå°‘ãªã„å ´åˆã€ã“ã®ä½•å›ãƒ“ãƒ¼ã‚³ãƒ³ã‚’å—ä¿¡ã—ãŸã‚‰ã€ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹
+const MAXSEND  = 5;                                     //é€ä¿¡å›æ•°
 */
 
 var conf = new Object();
 
-var fs = require('fs');                                 //İ’èƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+var fs = require('fs');                                 //è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 
 fs.readFile('config.json', 'utf8', function (err, text) {
     if(err == null) {
@@ -26,27 +26,27 @@ fs.readFile('config.json', 'utf8', function (err, text) {
     } else {
        console.log('error!');
        console.log(err);
-       process.exit(0);                             //‹­§I—¹
+       process.exit(0);                             //å¼·åˆ¶çµ‚äº†
     }
 });
 
-var msg = new Object();         //ƒT[ƒo[‚É’Ê’m‚·‚éJSON‚ğŠi”[
+var msg = new Object();         //ã‚µãƒ¼ãƒãƒ¼ã«é€šçŸ¥ã™ã‚‹JSONã‚’æ ¼ç´
                                 //{gateway:xxxxx, time:xxxxx, uuid:xxxxx, beacon:beacons[]}
-var beacons = [];               //óM‚µ‚½ƒr[ƒRƒ“‚Ìî•ñ‚ğŠi”[AƒƒWƒƒ[‚ğƒ†ƒj[ƒNƒL[‚Æ‚µ‚ÄÅŒã‚ÉóM‚µ‚½’l‚ğ•Û‘¶
+var beacons = [];               //å—ä¿¡ã—ãŸãƒ“ãƒ¼ã‚³ãƒ³ã®æƒ…å ±ã‚’æ ¼ç´ã€ãƒ¡ã‚¸ãƒ£ãƒ¼ã‚’ãƒ¦ãƒ‹ãƒ¼ã‚¯ã‚­ãƒ¼ã¨ã—ã¦æœ€å¾Œã«å—ä¿¡ã—ãŸå€¤ã‚’ä¿å­˜
                                 //{majer:xxxxx, miner:xxxxx, rssi:xxxx}
-var beaconNo = [];              //óM‚µ‚½ƒƒWƒƒ[”Ô†+ƒ}ƒCƒi[”Ô†‚ğ•Û‘¶
+var beaconNo = [];              //å—ä¿¡ã—ãŸãƒ¡ã‚¸ãƒ£ãƒ¼ç•ªå·+ãƒã‚¤ãƒŠãƒ¼ç•ªå·ã‚’ä¿å­˜
 
-var beaconCount = 0;            //óM‚µ‚½ƒr[ƒRƒ“‚ÌƒfƒoƒCƒX”‚ğƒJƒEƒ“ƒg
+var beaconCount = 0;            //å—ä¿¡ã—ãŸãƒ“ãƒ¼ã‚³ãƒ³ã®ãƒ‡ãƒã‚¤ã‚¹æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
 
-var loopCount = 0;              //óM‚µ‚½ƒr[ƒRƒ“‚ÌƒƒbƒZ[ƒW”‚ğƒJƒEƒ“ƒg
+var loopCount = 0;              //å—ä¿¡ã—ãŸãƒ“ãƒ¼ã‚³ãƒ³ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
 
-var sendCount = 0;              //‘—M‰ñ”
+var sendCount = 0;              //é€ä¿¡å›æ•°
 
-trigger.subscribe('trigger');   //MQTTƒTƒuƒXƒNƒ‰ƒCƒo[‚Ì’è‹`
+trigger.subscribe('trigger');   //MQTTã‚µãƒ–ã‚¹ã‚¯ãƒ©ã‚¤ãƒãƒ¼ã®å®šç¾©
 
-bleacon.startScanning();        //ƒr[ƒRƒ“ŒŸ’m‚ğŠJn
+bleacon.startScanning();        //ãƒ“ãƒ¼ã‚³ãƒ³æ¤œçŸ¥ã‚’é–‹å§‹
 
-//ƒXƒŠ[ƒvƒ^ƒCƒ}[iƒ~ƒŠ•bj
+//ã‚¹ãƒªãƒ¼ãƒ—ã‚¿ã‚¤ãƒãƒ¼ï¼ˆãƒŸãƒªç§’ï¼‰
 function sleep(time) {
   var d1 = new Date().getTime();
   var d2 = new Date().getTime();
@@ -57,7 +57,7 @@ function sleep(time) {
 }
 
 
-//MQTT‚Åtrigger‚ğóM‚µ‚½‚ç‰Šú‰»
+//MQTTã§triggerã‚’å—ä¿¡ã—ãŸã‚‰åˆæœŸåŒ–
 trigger.on('message',function(tipic, message) {
         console.log('Recive trigger!');
         beacons.length = 0;
@@ -75,23 +75,23 @@ setInterval(function() {
     if(beaconCount != 0) {
         msg.beacon = beacons;
         console.log(beacons.length);
-        client.publish("beacon",JSON.stringify(msg));   //ƒƒbƒZ[ƒW‚ğMQTT‚Å‘—M
+        client.publish("beacon",JSON.stringify(msg));   //ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’MQTTã§é€ä¿¡
         console.log(JSON.stringify(msg));
-        client.publish("no",String(beacons.length));    //ŒÂ”‚ğMQTT‚Å‘—M
+        client.publish("no",String(beacons.length));    //å€‹æ•°ã‚’MQTTã§é€ä¿¡
 
         beaconCount = 0;
         loopCount = 0;
         }
  }, 1000);
 
-//ƒr[ƒRƒ“‚ğŒŸ’m
+//ãƒ“ãƒ¼ã‚³ãƒ³ã‚’æ¤œçŸ¥
 bleacon.on("discover", function(bleacon) {
 
     //console.log(bleacon.uuid);
 
-    if(beaconCount == 0) {       //ƒNƒŠƒA’¼Œã‚ÍƒQ[ƒgƒEƒFƒC–¼AŒ»İŠÔAƒr[ƒR ƒ“‚ÌUUID‚ğƒƒbƒZ[ƒW‚É’Ç‰Á
-        beacons.length = 0;      //ƒr[ƒRƒ“î•ñ‚ğŠi”[‚·‚é”z—ñ‚ğƒNƒŠƒA
-        beaconNo.length = 0;      //ƒr[ƒRƒ“”Ô†iƒƒWƒƒ[{ƒ}ƒCƒi[j‚ğŠi”[‚·‚é”z—ñ‚ğƒNƒŠƒA
+    if(beaconCount == 0) {       //ã‚¯ãƒªã‚¢ç›´å¾Œã¯ã‚²ãƒ¼ãƒˆã‚¦ã‚§ã‚¤åã€ç¾åœ¨æ™‚é–“ã€ãƒ“ãƒ¼ã‚³ ãƒ³ã®UUIDã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«è¿½åŠ 
+        beacons.length = 0;      //ãƒ“ãƒ¼ã‚³ãƒ³æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’ã‚¯ãƒªã‚¢
+        beaconNo.length = 0;      //ãƒ“ãƒ¼ã‚³ãƒ³ç•ªå·ï¼ˆãƒ¡ã‚¸ãƒ£ãƒ¼ï¼‹ãƒã‚¤ãƒŠãƒ¼ï¼‰ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’ã‚¯ãƒªã‚¢
         var dt=new Date();
         formatted   = dt.toFormat("YYYY-MM-DDTHH24:MI:SS.") + sprintf("%03dZ", dt.getMilliseconds());
         msg.gateway = conf.mydevice;
@@ -101,7 +101,7 @@ bleacon.on("discover", function(bleacon) {
         //console.log(formatted);
     }
 
-    if (bleacon.uuid == conf.myuuid) {   //ƒƒP[ƒVƒ‡ƒ“—pƒr[ƒRƒ“‚ÌUUID‚©H
+    if (bleacon.uuid == conf.myuuid) {   //ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ãƒ“ãƒ¼ã‚³ãƒ³ã®UUIDã‹ï¼Ÿ
 
         var bcn = Object();
         bcn.major = bleacon.major;
@@ -110,16 +110,16 @@ bleacon.on("discover", function(bleacon) {
 
         var MajMin = String(bleacon.major) + String(bleacon.minor);
         //console.log(MajMin);
-        var i = beaconNo.indexOf(MajMin);            //“¯‚¶ƒƒWƒƒ[‚ğŒŸõ
-        if (i == -1) {                               //ƒr[ƒRƒ“”Ô†‚ª“o˜^‚³‚ê‚Ä ‚¢‚È‚¢
-            beaconNo.push(MajMin);                   //ƒr[ƒRƒ“”Ô†‚ğ’Ç‰Á
-            beacons.push(bcn);                       //ƒr[ƒRƒ“‚Ìî•ñ‚ğ’Ç‰Á
+        var i = beaconNo.indexOf(MajMin);            //åŒã˜ãƒ¡ã‚¸ãƒ£ãƒ¼ã‚’æ¤œç´¢
+        if (i == -1) {                               //ãƒ“ãƒ¼ã‚³ãƒ³ç•ªå·ãŒç™»éŒ²ã•ã‚Œã¦ ã„ãªã„
+            beaconNo.push(MajMin);                   //ãƒ“ãƒ¼ã‚³ãƒ³ç•ªå·ã‚’è¿½åŠ 
+            beacons.push(bcn);                       //ãƒ“ãƒ¼ã‚³ãƒ³ã®æƒ…å ±ã‚’è¿½åŠ 
             //console.log("add Beacon");
             //console.log(JSON.stringify(bcn));
-            beaconCount++;                           //—LŒø‚Èƒr[ƒRƒ“‚ÌŒÂ”‚ğƒJ ƒEƒ“ƒg
+            beaconCount++;                           //æœ‰åŠ¹ãªãƒ“ãƒ¼ã‚³ãƒ³ã®å€‹æ•°ã‚’ã‚« ã‚¦ãƒ³ãƒˆ
 
-        } else {                                     //ƒƒWƒƒ[‚ª“o˜^‚³‚ê‚Ä‚¢‚½
-            beacons[i] = bcn;                        //ƒr[ƒRƒ“‚Ìî•ñ‚ğXV
+        } else {                                     //ãƒ¡ã‚¸ãƒ£ãƒ¼ãŒç™»éŒ²ã•ã‚Œã¦ã„ãŸ
+            beacons[i] = bcn;                        //ãƒ“ãƒ¼ã‚³ãƒ³ã®æƒ…å ±ã‚’æ›´æ–°
             //console.log("up date Beacon");
             //console.log(i);
             //console.log(JSON.stringify(bcn));
