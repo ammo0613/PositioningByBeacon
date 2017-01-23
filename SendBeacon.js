@@ -57,7 +57,7 @@ trigger.subscribe('trigger');   //MQTTサブスクライバーの定義　トピ
 //MQTTでtriggerを受信したらビーコン受信と送信を開始
 trigger.on('message',function(tipic, message) {
 	console.log('Recive trigger!');
-	if(sendStatus = 0) {
+	if(sendStatus == 0) {
 		console.log("Now Sending!");
 	} else {
 		beacons.length = 0;
