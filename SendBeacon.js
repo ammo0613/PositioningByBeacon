@@ -80,7 +80,7 @@ setInterval(function() {
 
         beaconCount = 0;
         sendCount++;
-        if(sendCount > config.maxsend) {          //指定した回数送信したなら
+        if(sendCount > conf.maxsend) {          //指定した回数送信したなら
             sendStatus = -1;                 //送信を停止
 	    endCount = 0;                   //送信回数をクリア
         }
