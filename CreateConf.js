@@ -6,6 +6,6 @@ var data = {
     maxbeacon: 10,
     maxrecv: 20,
     maxsend: 5,
-	interval: 1000;
+    interval: 1000;
 };
 fs.writeFile('config.json', JSON.stringify(data, null, '    '));
