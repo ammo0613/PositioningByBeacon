@@ -1,17 +1,18 @@
-﻿var date    = require('date-utils');
+var date    = require('date-utils');
 var sprintf = require('sprintf-js').sprintf;
+
 var bleacon = require("bleacon");
 
 var mqtt    = require("mqtt");
 var client  = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //送信用
 var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //受信用
 
-
 /* 設定ファイルに移行
 const MYDEVICE = "MyEdison2";                           //ビーコン検知用ゲートウェイの名前
 const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ロケーション用ビーコンのUUID
 const MAXBEACON = 10;                                   //この回数ビーコンデバイスを検出したら、サーバーに送信する
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
+<<<<<<< HEAD
 const MAXSEND  = 5;                                     //1階の指示でビーコン情報を送信する回数
 const INTERVAL = 3000;                                  //ビーコンメッセージの送信間隔(ms)
 */
@@ -35,7 +36,7 @@ var msg = new Object();         //サーバーに通知するJSONを格納
 var beacons = [];               //受信したビーコンの情報を格納、メジャーをユニークキーとして最後に受信した値を保存
                                 //{majer:xxxxx, miner:xxxxx, rssi:xxxx}
 var beaconNo = [];              //受信したメジャー番号+マイナー番号を保存
-var beaconCount = 0;           //受信したビーコンのデバイス数をカウント
+var beaconCount = 0;            //受信したビーコンのデバイス数をカウント
 var sendCount = 0;              //送信回数（マイナスの場合は送信しない）
 var sendStatus = -1;            //送信指示の状態(-1:送信しない、0:送信中)
 
