@@ -57,13 +57,17 @@ trigger.subscribe('trigger');   //MQTTサブスクライバーの定義　トピ
 //MQTTでtriggerを受信したらビーコン受信と送信を開始
 trigger.on('message',function(tipic, message) {
 	console.log('Recive trigger!');
-	beacons.length = 0;
-	beaconNo.length = 0;
-	beaconCount = 0;
-        sendCount = 0;
-	console.log("Sleep");
-	sleep(3000);
-	sendStatus = 0;
+	if(sendStatus = 0) {
+		console.log("Now Sending!");
+	} else {
+		beacons.length = 0;
+		beaconNo.length = 0;
+		beaconCount = 0;
+        	sendCount = 0;
+		console.log("Sleep");
+		sleep(3000);
+		sendStatus = 0;
+	}
 });
 
 //設定ファイルのinterval秒ごとにビーコンメッセージを送信
