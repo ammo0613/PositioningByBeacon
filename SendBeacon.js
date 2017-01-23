@@ -84,7 +84,7 @@ setInterval(function() {
 			sendStatus = -1;                            //送信を停止
 			sendCount = 0;                              //送信回数をクリア
 	}	
- }, conf.interval);                                     //インターバル時間
+ }, 30000);                                     //インターバル時間
 
 //ビーコンを検知
 bleacon.on("discover", function(bleacon) {
