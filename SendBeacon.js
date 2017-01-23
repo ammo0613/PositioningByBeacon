@@ -79,12 +79,13 @@ setInterval(function() {
         console.log(beacons.length);
 
         beaconCount = 0;
-		messageCount++;
-		if(sendCount > config.maxsend)           //指定した回数送信したなら
-			sendStatus = -1;                 //送信を停止
-			sendCount = 0;                   //送信回数をクリア
-	}	
- }, 3000);                                               //インターバル時間
+        sendCount++;
+        if(sendCount > config.maxsend) {          //指定した回数送信したなら
+            sendStatus = -1;                 //送信を停止
+	    endCount = 0;                   //送信回数をクリア
+        }
+    }	
+}, 3000);                                               //インターバル時間
 
 //ビーコンを検知
 bleacon.on("discover", function(bleacon) {
