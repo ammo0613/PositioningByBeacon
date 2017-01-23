@@ -68,8 +68,8 @@ trigger.on('message',function(tipic, message) {
 
 //設定ファイルのinterval秒ごとにビーコンメッセージを送信
 setInterval(function() {
-    console.log('Send Message');
     if(beaconCount >= 1) {                              //ビーコンを１つ以上受信している場合は送信
+        console.log('Send Message');
         msg.beacon = beacons;
 
         client.publish("beacon",JSON.stringify(msg));   //ビーコンメッセージをMQTTで送信 トピック:"beacon"
