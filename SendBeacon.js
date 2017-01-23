@@ -8,7 +8,7 @@ var client  = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      
 var trigger = mqtt.connect('mqtt://test-suda-4xx44l81.cloudapp.net:1883');      //受信用
 
 /* 設定ファイルに移行
-const MYDEVICE = "MyEdison2";                           //ビーコン検知用ゲートウェイの名前
+const MYDEVICE = "MyEdison1";                           //ビーコン検知用ゲートウェイの名前
 const MYUUID   = "e814b8d8963a49e788ab59a6c9b1a2e7";    //ロケーション用ビーコンのUUID
 const MAXBEACON = 10;                                   //この回数ビーコンデバイスを検出したら、サーバーに送信する
 const MAXRECV  = 20;                                    //ビーコン数が少ない場合、この何回ビーコンを受信したら、サーバーに送信する
@@ -60,7 +60,7 @@ trigger.on('message',function(tipic, message) {
 	beacons.length = 0;
 	beaconNo.length = 0;
 	beaconCount = 0;
-    sendCount = 0;
+        sendCount = 0;
 	console.log("Sleep");
 	sleep(3000);
 	sendStatus = 0;
@@ -80,9 +80,9 @@ setInterval(function() {
 
         beaconCount = 0;
         sendCount++;
-        if(sendCount > conf.maxsend) {          //指定した回数送信したなら
+        if(sendCount >= conf.maxsend) {          //指定した回数送信したなら
             sendStatus = -1;                 //送信を停止
-	    endCount = 0;                   //送信回数をクリア
+	    sendCount = 0;                   //送信回数をクリア
         }
     }	
 }, 3000);                                               //インターバル時間
