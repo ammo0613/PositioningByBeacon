@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 var data = {
-    mydevice: 'MyEdison2',
+    mydevice: 'MyEdison1',
     myuuid: 'e814b8d8963a49e788ab59a6c9b1a2e7',
     maxbeacon: 10,
     maxrecv: 20,
